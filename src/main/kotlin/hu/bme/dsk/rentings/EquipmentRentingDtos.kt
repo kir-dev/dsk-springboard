@@ -1,9 +1,10 @@
 package hu.bme.dsk.rentings
 
 import hu.bme.dsk.equipments.EquipmentDto
+import java.util.UUID
 
 data class EquipmentRentingDto(
-    val id: Long,
+    val id: UUID,
     val count: Int
 ) {
     constructor(equipmentRenting: EquipmentRentingEntity) : this(
@@ -13,7 +14,7 @@ data class EquipmentRentingDto(
 }
 
 data class DetailedEquipmentRentingDto(
-    val id: Long,
+    val id: UUID,
     val count: Int,
     val equipment: EquipmentDto,
     val renting: RentingDto,
@@ -25,3 +26,13 @@ data class DetailedEquipmentRentingDto(
         renting = RentingDto(equipmentRenting.renting),
     )
 }
+
+data class CreateEquipmentRentingDto(
+    val count: Int,
+    val equipmentId: UUID,
+)
+
+data class UpdateEquipmentRentingDto(
+    val count: Int,
+    val equipmentId: UUID,
+)
