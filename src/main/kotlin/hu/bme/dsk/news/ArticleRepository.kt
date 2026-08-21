@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository
 
 
 @Repository
-interface ArticleRepository : JpaRepository<ArticleEntitiy, Long> {
-    fun findAllByAuthor(author: String): List<ArticleEntitiy>
+interface ArticleRepository : JpaRepository<ArticleEntity, Long> {
+    fun findAllByAuthor(author: String): List<ArticleEntity>
 
-    fun findByOrderByCreatedAtDesc(pageable: Pageable): List<ArticleEntitiy>
+    fun findByOrderByCreatedAtDesc(pageable: Pageable): List<ArticleEntity>
 }

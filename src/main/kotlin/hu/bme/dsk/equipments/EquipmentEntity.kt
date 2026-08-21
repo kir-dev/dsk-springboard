@@ -23,7 +23,7 @@ data class EquipmentEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sport_id", nullable = false)
-    var sportId: SportEntity,
+    var sport: SportEntity,
 
     @OneToMany(mappedBy = "sport_equipment", cascade = [CascadeType.ALL], orphanRemoval = true)
     var equipmentRenting: MutableList<EquipmentRentingEntity> = mutableListOf(),

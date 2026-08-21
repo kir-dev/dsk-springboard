@@ -1,8 +1,7 @@
 package hu.bme.dsk.sports
 
+import hu.bme.dsk.equipments.EquipmentEntity
 import jakarta.persistence.*
-import org.hibernate.validator.constraints.UUID
-import kotlin.uuid.Uuid
 
 @Entity
 @Table(name = "sports")
@@ -14,7 +13,7 @@ data class SportEntity(
     var name: String,
 
     @OneToMany(mappedBy = "sport", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var sportEquipments: MutableList<SportEntity> = mutableListOf(),
+    var equipments: MutableList<EquipmentEntity> = mutableListOf(),
 ) {
     override fun hashCode(): Int {
         return javaClass.hashCode()

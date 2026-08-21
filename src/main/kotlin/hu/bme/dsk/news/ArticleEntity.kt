@@ -3,11 +3,11 @@ package hu.bme.dsk.news
 import hu.bme.dsk.users.UserEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
-import kotlin.time.Instant
+import java.time.Instant
 
 @Entity
 @Table(name = "articles")
-data class ArticleEntitiy(
+data class ArticleEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: Long,
@@ -19,11 +19,13 @@ data class ArticleEntitiy(
     @Column(updatable = false)
     val createdAt: Instant,
 
-    var text: String,
+    var title: String,
+
+    var content: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is ArticleEntitiy) return false
+        if (other !is ArticleEntity) return false
         if (id != other.id) return false
         return true
     }
@@ -33,6 +35,6 @@ data class ArticleEntitiy(
     }
 
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , author = $author , text = $text )"
+        return this::class.simpleName + "(id = $id , author = $author , title = $title , content = $content)"
     }
 }
