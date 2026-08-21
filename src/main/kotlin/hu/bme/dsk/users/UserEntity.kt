@@ -6,19 +6,20 @@ import hu.bme.dsk.news.ArticleEntity
 import hu.bme.dsk.rentings.RentingEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.ColumnDefault
+import java.util.UUID
 
 @Entity
 @Table(name = "users")
 data class UserEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: Long,
+    val id: UUID = UUID.randomUUID(),
 
     var username: String,
 
-    var authId: Long? = null,
+    var authId: String? = null,
 
-    var googleId: Long? = null,
+    var googleId: String? = null,
 
     var roles: MutableList<UserRole> = mutableListOf(),
 

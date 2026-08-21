@@ -3,13 +3,14 @@ package hu.bme.dsk.users
 import hu.bme.dsk.gymreservation.ReservationDto
 import hu.bme.dsk.news.ArticleDto
 import hu.bme.dsk.rentings.RentingDto
+import java.util.UUID
 
 
 data class UserDto(
-    val id : Long,
+    val id : UUID,
     val username : String,
-    val authId : Long?,
-    val googleId : Long?,
+    val authId : String?,
+    val googleId : String?,
     val roles : List<UserRole>?,
 ) {
     constructor(user: UserEntity) : this(
@@ -22,10 +23,10 @@ data class UserDto(
 }
 
 data class DetailedUserDto(
-    val id : Long,
+    val id : UUID,
     val username: String,
-    val authId : Long?,
-    val googleId : Long?,
+    val authId : String?,
+    val googleId : String?,
     val roles : List<UserRole>?,
     val reservations: List<ReservationDto>,
     val rentings: List<RentingDto>,
@@ -42,3 +43,8 @@ data class DetailedUserDto(
         articles = user.articles.map { ArticleDto(it) },
     )
 }
+
+data class UpdateUserDto(
+    val username: String,
+    val roles: List<UserRole>,
+)

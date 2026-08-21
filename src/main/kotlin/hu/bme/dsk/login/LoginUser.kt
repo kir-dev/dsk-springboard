@@ -3,11 +3,12 @@ package hu.bme.dsk.login
 import hu.bme.dsk.users.UserEntity
 import hu.bme.dsk.users.UserRepository
 import hu.bme.dsk.users.UserRole
+import java.util.UUID
 
 interface LoginUser {
-    val id: Long
-    val authId: Long?
-    val googleId: Long?
+    val id: UUID
+    val authId: String?
+    val googleId: String?
     var roles: List<UserRole>
     val userName: String
 

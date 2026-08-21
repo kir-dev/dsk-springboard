@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Service
 import java.util.Date
+import java.util.UUID
 
 const val JWT_CLAIM_ROLES = "roles"
 const val JWT_CLAIM_USERID = "userId"
@@ -47,9 +48,9 @@ class JwtTokenService (
     }
 
     fun createToken(
-        userId: Long,
-        userAuthId: Long?,
-        userGoogleId: Long?,
+        userId: UUID,
+        userAuthId: String?,
+        userGoogleId: String?,
         roles: List<UserRole>,
         fullName: String,
     ): String {
