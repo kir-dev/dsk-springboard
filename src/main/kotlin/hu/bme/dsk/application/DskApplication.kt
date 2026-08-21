@@ -1,4 +1,4 @@
-package hu.bme.dsk
+package hu.bme.dsk.application
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
