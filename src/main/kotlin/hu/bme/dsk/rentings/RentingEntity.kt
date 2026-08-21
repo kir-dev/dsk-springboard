@@ -1,8 +1,6 @@
 package hu.bme.dsk.rentings
 
 
-import hu.bme.dsk.sportequipments.SportEquipmentEntity
-import hu.bme.dsk.rentings.SportEquipmentRentingEntity
 import hu.bme.dsk.users.UserEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
@@ -29,7 +27,7 @@ data class RentingEntity(
     var rentingStatus: RentingStatus,
 
     @OneToMany(mappedBy = "renting", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var equipmentRenting: MutableList<SportEquipmentRentingEntity> = mutableListOf(),
+    var equipmentRenting: MutableList<EquipmentRentingEntity> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     var issuingUser: UserEntity,

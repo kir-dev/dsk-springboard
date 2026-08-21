@@ -1,12 +1,12 @@
-package hu.bme.dsk.sportequipments
+package hu.bme.dsk.equipments
 
-import hu.bme.dsk.rentings.SportEquipmentRentingEntity
+import hu.bme.dsk.rentings.EquipmentRentingEntity
 import hu.bme.dsk.sports.SportEntity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "sport_equipments")
-data class SportEquipmentEntity(
+@Table(name = "equipments")
+data class EquipmentEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: Long,
@@ -17,6 +17,8 @@ data class SportEquipmentEntity(
 
     var count: Int,
 
+    var availableCount: Int,
+
     var imageLink: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,7 +26,7 @@ data class SportEquipmentEntity(
     var sportId: SportEntity,
 
     @OneToMany(mappedBy = "sport_equipment", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var equipmentRenting: MutableList<SportEquipmentRentingEntity> = mutableListOf(),
+    var equipmentRenting: MutableList<EquipmentRentingEntity> = mutableListOf(),
 ) {
     override fun toString(): String {
         return this::class.java.simpleName + "(id = $id, name = $name, description = $description, count = $count)"
@@ -32,7 +34,7 @@ data class SportEquipmentEntity(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is SportEquipmentEntity) return false
+        if (other !is EquipmentEntity) return false
         if (id != other.id) return false
         return true
     }
