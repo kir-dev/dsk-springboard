@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="DskApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="dsk.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="hu.bme.dsk.application.DskApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

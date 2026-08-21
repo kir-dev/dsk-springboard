@@ -5,6 +5,7 @@ import hu.bme.dsk.gymreservation.ReservationEntity
 import hu.bme.dsk.news.ArticleEntity
 import hu.bme.dsk.rentings.RentingEntity
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 
 @Entity
 @Table(name = "users")
@@ -15,9 +16,9 @@ data class UserEntity(
 
     var username: String,
 
-    var authId: Long?,
+    var authId: Long? = null,
 
-    var googleId: Long?,
+    var googleId: Long? = null,
 
     var roles: MutableList<UserRole> = mutableListOf(),
 

@@ -9,6 +9,7 @@ spring:
 
   application:
     name: dsk
+
   jpa:
     properties:
       hibernate:
@@ -21,3 +22,36 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          authsch:
+            client-id: "59664918612575202731"
+            client-secret: "szVYihbiGD5EeEFSroZhOJUJ7IbhGjUAAqwDcaoILF8dtlryOYGJUjLCwsfhHRGYCHvbnaXbhMxW8CuH"
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://localhost:8080/login/oauth2/code/authsch"
+          google:
+            client-id: "asdf"
+            client-secret: "asdf"
+            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+
+        provider:
+          authsch:
+            authorization-uri: "https://auth.sch.bme.hu/site/login"
+            token-uri: "https://auth.sch.bme.hu/oauth2/token"
+            user-name-attribute: internal_id
+            user-info-authentication-method: header
+            user-info-uri: "https://auth.sch.bme.hu/oidc/userinfo"
+          google:
+            authorization-uri: "https://accounts.google.com/o/oauth2/v2/auth"
+            token-uri: "https://accounts.google.com/o/oauth2/token"
+
+hu:
+  bme:
+    dsk:
+      startup:
+        secret-key: secret-key
+        session-validity-seconds: 36000
+        sysadmins: "asdf"
