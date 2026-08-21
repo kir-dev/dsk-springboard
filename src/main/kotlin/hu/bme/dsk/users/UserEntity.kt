@@ -13,6 +13,8 @@ data class UserEntity(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: Long,
 
+    var username: String,
+
     var authId: Long?,
 
     var googleId: Long?,
