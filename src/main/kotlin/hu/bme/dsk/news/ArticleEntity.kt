@@ -4,15 +4,17 @@ import hu.bme.dsk.users.UserEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import java.time.Instant
+import java.util.UUID
 
 @Entity
 @Table(name = "articles")
 data class ArticleEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: Long,
+    val id: UUID = UUID.randomUUID(),
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id", nullable = false)
     var author: UserEntity,
 
     @CreationTimestamp
