@@ -6,8 +6,10 @@ import hu.bme.dsk.login.google.GoogleUserInfoResponse
 import hu.bme.dsk.users.UserEntity
 import hu.bme.dsk.users.UserService
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 import org.springframework.transaction.PlatformTransactionManager
 
+@Service
 class LoginService(
     private val users: UserService,
     private val startupPropertyConfig: StartupPropertyConfig,

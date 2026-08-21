@@ -17,13 +17,13 @@ import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.reactive.function.client.WebClient
 import tools.jackson.databind.ObjectMapper
 import org.springframework.security.config.Customizer
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
@@ -112,7 +112,7 @@ class SpringSecurityConfig(
                 UserRole.BLOGGER.name
             )
         }
-        http.formLogin
+        http.formLogin { it.disable() }
         http.exceptionHandling { it.accessDeniedPage("/403") }
         http.with(JwtConfigurer(jwtTokenService), Customizer.withDefaults())
 //        http.with(SessionFilterConfigurer(startupPropertyConfig), Customizer.withDefaults())
@@ -142,6 +142,8 @@ class SpringSecurityConfig(
                     response.sendRedirect("/oauth2/authorization?error=$encoded")
                 }
         }
+
+
 
         http.csrf {
             it.ignoringRequestMatchers(

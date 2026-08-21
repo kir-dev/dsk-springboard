@@ -7,7 +7,7 @@ import org.springframework.boot.runApplication
 
 @EnableConfigurationProperties(value = [StartupPropertyConfig::class])
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = ["hu.bme.dsk"])
 class DskApplication
 
 fun main(args: Array<String>) {

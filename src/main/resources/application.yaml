@@ -48,10 +48,16 @@ spring:
             authorization-uri: "https://accounts.google.com/o/oauth2/v2/auth"
             token-uri: "https://accounts.google.com/o/oauth2/token"
 
+logging:
+  level:
+    root: DEBUG
+    hu.bme.dsk: DEBUG
+
+
 hu:
   bme:
     dsk:
       startup:
-        secret-key: secret-key
+        secret-key: secret-keyffffffffffffffffffffffffffffffffffff
         session-validity-seconds: 36000
         sysadmins: "asdf"

@@ -1,6 +1,7 @@
 package hu.bme.dsk.config
 
 import jakarta.servlet.http.HttpServletRequest
+import org.slf4j.LoggerFactory
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver
@@ -15,14 +16,17 @@ class CustomAuthorizationRequestResolver(
 ) : OAuth2AuthorizationRequestResolver {
 
     private var defaultResolver: OAuth2AuthorizationRequestResolver? = null
+    private val log = LoggerFactory.getLogger(javaClass)
 
     init {
         defaultResolver = DefaultOAuth2AuthorizationRequestResolver(repo, authorizationRequestBaseUri)
     }
 
     override fun resolve(request: HttpServletRequest): OAuth2AuthorizationRequest? {
+        log.debug("resolve() called with servletPath={}", request.servletPath)
         return when (request.servletPath) {
             "/oauth2/authorization/google" -> {
+                log.debug("Detected Google OAuth request")
                 var req: OAuth2AuthorizationRequest? = defaultResolver?.resolve(request)
                 if (req != null)
                     req = customizeAuthorizationRequest(req, GOOGLE)
@@ -30,6 +34,7 @@ class CustomAuthorizationRequestResolver(
             }
 
             else -> {
+                log.debug("Detected AuthSch OAuth request (default path)")
                 var req: OAuth2AuthorizationRequest? = defaultResolver?.resolve(request)
                 if (req != null)
                     req = customizeAuthorizationRequest(req, AUTHSCH)
@@ -39,6 +44,7 @@ class CustomAuthorizationRequestResolver(
     }
 
     override fun resolve(request: HttpServletRequest, clientRegistrationId: String): OAuth2AuthorizationRequest? {
+        log.debug("resolve() called with clientRegistrationId={}, path={}", clientRegistrationId, request.servletPath)
         var req: OAuth2AuthorizationRequest? = defaultResolver?.resolve(request, clientRegistrationId)
         if (req != null)
             req = customizeAuthorizationRequest(req, clientRegistrationId)
@@ -49,21 +55,31 @@ class CustomAuthorizationRequestResolver(
         request: OAuth2AuthorizationRequest,
         clientRegistrationId: String
     ): OAuth2AuthorizationRequest? {
+        log.debug("customizeAuthorizationRequest called with clientRegistrationId={}", clientRegistrationId)
+        log.debug("Current scopes: {}", request.scopes)
+
         return when (clientRegistrationId) {
-            AUTHSCH -> OAuth2AuthorizationRequest
-                .from(request)
-                .scope("basic", "displayName")
-                .build()
+            AUTHSCH -> {
+                log.debug("Building AUTHSCH authorization request")
+                OAuth2AuthorizationRequest
+                    .from(request)
+                    .build()
+            }
 
+            GOOGLE -> {
+                log.debug("Building GOOGLE authorization request")
+                OAuth2AuthorizationRequest
+                    .from(request)
+                    .scopes(setOf("profile", "email", "openid"))
+                    .build()
+            }
 
-            GOOGLE -> OAuth2AuthorizationRequest
-                .from(request)
-                .scope("profile", "email", "openid")
-                .build()
-
-            else -> OAuth2AuthorizationRequest
-                .from(request)
-                .build()
+            else -> {
+                log.debug("Building DEFAULT authorization request for {}", clientRegistrationId)
+                OAuth2AuthorizationRequest
+                    .from(request)
+                    .build()
+            }
         }
     }
 
