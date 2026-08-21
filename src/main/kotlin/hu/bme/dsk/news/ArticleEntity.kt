@@ -17,7 +17,7 @@ data class ArticleEntity(
 
     @CreationTimestamp
     @Column(updatable = false)
-    val createdAt: Instant,
+    val createdAt: Instant = Instant.now(),
 
     var title: String,
 

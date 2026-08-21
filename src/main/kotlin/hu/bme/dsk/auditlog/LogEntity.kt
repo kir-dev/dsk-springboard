@@ -15,7 +15,7 @@ data class LogEntity(
 
     @CreationTimestamp
     @Column(updatable = false)
-    var createdAt: Instant,
+    var createdAt: Instant = Instant.now(),
 
     var message: String,
 ) {

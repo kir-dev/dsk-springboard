@@ -2,8 +2,9 @@ package hu.bme.dsk.rentings
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
+import java.util.UUID
 
 @Repository
-interface RentingRepository : JpaRepository<RentingEntity, Long> {
+interface RentingRepository : JpaRepository<RentingEntity, UUID> {
 
 }

@@ -16,13 +16,14 @@ data class RentingEntity(
 
     @CreationTimestamp
     @Column(updatable = false)
-    val createdAt: Instant,
+    val createdAt: Instant = Instant.now(),
 
     var startTime: Instant,
 
     var endTime: Instant,
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creating_user_id", nullable = false)
     var creatingUser: UserEntity,
 
     var rentingStatus: RentingStatus,
@@ -50,6 +51,6 @@ data class RentingEntity(
     }
 
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , startTime = $startTime , endTime = $endTime , creatingUser = $creatingUser , issuingUser = $issuingUser , returningUser = $returningUser )"
+        return this::class.simpleName + "(id = $id, startTime = $startTime, endTime = $endTime, status = $rentingStatus)"
     }
 }
