@@ -2,13 +2,14 @@ package hu.bme.dsk.sports
 
 import hu.bme.dsk.equipments.EquipmentEntity
 import jakarta.persistence.*
+import java.util.UUID
 
 @Entity
 @Table(name = "sports")
 data class SportEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: Long,
+    val id: UUID = UUID.randomUUID(),
 
     var name: String,
 

@@ -1,9 +1,10 @@
 package hu.bme.dsk.equipments
 
 import hu.bme.dsk.sports.SportDto
+import java.util.UUID
 
 data class EquipmentDto(
-    val id: Long,
+    val id: UUID,
     val name: String,
     val description: String,
     val count: Int,
@@ -21,7 +22,7 @@ data class EquipmentDto(
 }
 
 data class DetailedEquipmentDto(
-    val id: Long,
+    val id: UUID,
     val name: String,
     val description: String,
     val count: Int,
@@ -39,3 +40,18 @@ data class DetailedEquipmentDto(
         sportDto = SportDto(equipment.sport)
     )
 }
+
+data class CreateEquipmentDto(
+    val name: String,
+    val description: String,
+    val count: Int,
+    val imageLink: String
+)
+
+data class UpdateEquipmentDto(
+    val name: String,
+    val description: String,
+    val count: Int,
+    val availableCount: Int,
+    val imageLink: String
+)

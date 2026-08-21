@@ -5,13 +5,14 @@ import hu.bme.dsk.users.UserEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import java.time.Instant
+import java.util.UUID
 
 @Entity
 @Table(name = "renting")
 data class RentingEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: Long,
+    val id: UUID = UUID.randomUUID(),
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -30,10 +31,12 @@ data class RentingEntity(
     var equipmentRenting: MutableList<EquipmentRentingEntity> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
-    var issuingUser: UserEntity,
+    @JoinColumn(name = "issuing_user_id")
+    var issuingUser: UserEntity?,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    var returningUser: UserEntity,
+    @JoinColumn(name = "returning_user_id")
+    var returningUser: UserEntity?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
