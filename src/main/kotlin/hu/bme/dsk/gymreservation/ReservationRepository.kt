@@ -1,36 +1,36 @@
 package hu.bme.dsk.gymreservation
 
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.time.Instant
+import java.util.UUID
 
 @Repository
-interface ReservationRepository : JpaRepository<ReservationEntity, Long> {
-    fun findAllByStartTimeIsAfterOrderByStartTimeAsc(time: Instant, pageable: Pageable): List<ReservationEntity>
+interface ReservationRepository : JpaRepository<ReservationEntity, UUID> {
+    fun findAllByStartTimeIsAfterOrderByStartTimeAsc(time: Instant): List<ReservationEntity>
 
-    fun findAllByEndTimeIsAfterOrderByEndTimeAsc(time: Instant, pageable: Pageable): List<ReservationEntity>
+    fun findAllByEndTimeIsAfterOrderByEndTimeAsc(time: Instant): List<ReservationEntity>
 
     fun findAllByReservationStatusIs(
-        reservationStatus: ReservationStatus,
-        pageable: Pageable
-    ): Page<ReservationEntity>
+        reservationStatus: ReservationStatus
+    ): List<ReservationEntity>
 
     fun findAllByCreatingUserId(
-        creatingUserId: Long,
-        pageable: Pageable
-    ): Page<ReservationEntity>
+        creatingUserId: UUID
+    ): List<ReservationEntity>
 
     fun findAllByReservationStatusIsAndStartTimeIsAfterOrderByStartTimeAsc(
         reservationStatus: ReservationStatus,
-        time: Instant,
-        pageable: Pageable
-    ): Page<ReservationEntity>
+        time: Instant
+    ): List<ReservationEntity>
 
     fun findAllByReservationStatusIsAndEndTimeIsBeforeOrderByEndTimeAsc(
         reservationStatus: ReservationStatus,
-        time: Instant,
-        pageable: Pageable
-    ): Page<ReservationEntity>
+        time: Instant
+    ): List<ReservationEntity>
+
+    fun findAllByStartTimeBetween(
+        startTime: Instant,
+        endTime: Instant
+    ) : List<ReservationEntity>
 }

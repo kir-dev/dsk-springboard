@@ -2,9 +2,10 @@ package hu.bme.dsk.gymreservation
 
 import hu.bme.dsk.users.UserDto
 import java.time.Instant
+import java.util.UUID
 
 data class ReservationDto(
-    val id: Long,
+    val id: UUID,
     val startTime: Instant,
     val endTime: Instant,
     val reservationStatus: ReservationStatus,
@@ -18,7 +19,7 @@ data class ReservationDto(
 }
 
 data class DetailedReservationDto(
-    val id: Long,
+    val id: UUID,
     val startTime: Instant,
     val endTime: Instant,
     val reservationStatus: ReservationStatus,
@@ -34,3 +35,17 @@ data class DetailedReservationDto(
         creatingUser = UserDto(reservation.creatingUser),
     )
 }
+
+data class CreateReservationDto(
+    val startTime: Instant,
+    val endTime: Instant,
+    val reservationStatus: ReservationStatus,
+    val creatingUserId: UUID,
+)
+
+data class UpdateReservationDto(
+    val startTime: Instant,
+    val endTime: Instant,
+    val reservationStatus: ReservationStatus,
+    val creatingUserId: UUID,
+)
