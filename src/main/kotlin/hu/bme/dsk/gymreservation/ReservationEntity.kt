@@ -5,13 +5,14 @@ import hu.bme.dsk.users.UserEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import java.time.Instant
+import java.util.UUID
 
 @Entity
 @Table(name = "gym_reservation")
 data class ReservationEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: Long,
+    val id: UUID = UUID.randomUUID(),
 
     @CreationTimestamp
     @Column(updatable = false)

@@ -15,7 +15,7 @@ class RentingService(
     @Transactional
     fun createRenting(dto: CreateRentingDto) : DetailedRentingDto {
         val creatingUser = userRepository.findById(dto.creatingUserId)
-            .orElseThrow{RuntimeException("User with id ${dto.creatingUserId} not found") }
+            .orElseThrow{ RuntimeException("User with id ${dto.creatingUserId} not found") }
 
         val issuingUser = dto.issuingUserId?.let {
             userRepository.findById(it)
