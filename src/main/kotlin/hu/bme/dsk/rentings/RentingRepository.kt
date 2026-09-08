@@ -6,5 +6,4 @@ import java.util.UUID
 
 @Repository
 interface RentingRepository : JpaRepository<RentingEntity, UUID> {
-
 }

@@ -69,6 +69,6 @@ class ReservationService (
 
     @Transactional(readOnly = true)
     fun getAllStartingBetween(startTime: Instant, endTime: Instant): List<DetailedReservationDto> {
-        return reservationRepository.findAllStartTimeBetween(startTime, endTime).map { DetailedReservationDto(it) }
+        return reservationRepository.findAllByStartTimeBetween(startTime, endTime).map { DetailedReservationDto(it) }
     }
 }
