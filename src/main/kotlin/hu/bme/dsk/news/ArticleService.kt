@@ -1,8 +1,11 @@
 package hu.bme.dsk.news
 
 import hu.bme.dsk.users.UserRepository
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 @Service
@@ -10,10 +13,10 @@ class ArticleService(
     private val articleRepository: ArticleRepository,
     private val userRepository: UserRepository,
 ) {
-    @Transactional
+    @Transactional(readOnly = false)
     fun createArticle(dto: CreateArticleDto, authorId: UUID) : DetailedArticleDto {
-        val author = userRepository.findById(authorId)
-                .orElseThrow { RuntimeException("Author user with id $authorId not found") }
+        val author = userRepository.findByIdOrNull(authorId)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Author user with id $authorId not found")
 
         val article = ArticleEntity(
             title = dto.title,
@@ -29,8 +32,8 @@ class ArticleService(
 
     @Transactional(readOnly = true)
     fun getArticleById(articleId: UUID) : DetailedArticleDto {
-        val article = articleRepository.findById(articleId)
-        .orElseThrow { RuntimeException("Article with id $articleId not found") }
+        val article = articleRepository.findByIdOrNull(articleId)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Article with id $articleId not found")
 
         return DetailedArticleDto(article)
     }
@@ -45,10 +48,10 @@ class ArticleService(
         return articleRepository.findAllByAuthor_Id(authorId).map{ DetailedArticleDto(it) }
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun updateArticle(id: UUID, dto: UpdateArticleDto) : DetailedArticleDto {
-        val article = articleRepository.findById(id)
-            .orElseThrow { RuntimeException("Article with id $id not found") }
+        val article = articleRepository.findByIdOrNull(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Article with id $id not found")
 
         article.apply {
             this.title = dto.title
@@ -59,10 +62,10 @@ class ArticleService(
         return DetailedArticleDto(savedArticle)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun deleteArticle(id: UUID) {
-        val article = articleRepository.findById(id)
-            .orElseThrow { RuntimeException("Article with id $id not found") }
+        val article = articleRepository.findByIdOrNull(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Article with id $id not found")
 
         article.author.articles.remove(article)
 

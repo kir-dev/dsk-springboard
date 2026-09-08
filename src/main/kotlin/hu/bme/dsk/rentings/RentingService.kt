@@ -1,9 +1,13 @@
 package hu.bme.dsk.rentings
 
 import hu.bme.dsk.equipments.EquipmentRepository
+import hu.bme.dsk.users.UserEntity
 import hu.bme.dsk.users.UserRepository
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 @Service
@@ -12,19 +16,19 @@ class RentingService(
     private val equipmentRepository: EquipmentRepository,
     private val userRepository: UserRepository,
 ) {
-    @Transactional
+    @Transactional(readOnly = false)
     fun createRenting(dto: CreateRentingDto) : DetailedRentingDto {
-        val creatingUser = userRepository.findById(dto.creatingUserId)
-            .orElseThrow{ RuntimeException("User with id ${dto.creatingUserId} not found") }
+        val creatingUser = userRepository.findByIdOrNull(dto.creatingUserId)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${dto.creatingUserId} not found")
 
         val issuingUser = dto.issuingUserId?.let {
-            userRepository.findById(it)
-                .orElseThrow { RuntimeException("User with id ${dto.issuingUserId} not found") }
+            userRepository.findByIdOrNull(it)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${dto.issuingUserId} not found")
         }
 
         val returningUser = dto.returningUserId?.let {
-            userRepository.findById(it)
-                .orElseThrow { RuntimeException("User with id ${dto.returningUserId} not found") }
+            userRepository.findByIdOrNull(it)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${dto.returningUserId} not found")
         }
 
         val renting = RentingEntity(
@@ -37,11 +41,11 @@ class RentingService(
         )
 
         for (request in dto.equipments) {
-            val equipment = equipmentRepository.findById(request.equipmentId)
-                .orElseThrow { RuntimeException("Equipment with id ${request.equipmentId} not found") }
+            val equipment = equipmentRepository.findByIdOrNull(request.equipmentId)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Equipment with id ${request.equipmentId} not found")
 
-            if (equipment.availableCount < request.count)
-                throw RuntimeException("Not enough stock for equipment: ${equipment.name}. Requested: ${request.count}, Available: ${equipment.availableCount}")
+        if (equipment.availableCount < request.count)
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST ,"Not enough stock for equipment: ${equipment.name}. Requested: ${request.count}, Available: ${equipment.availableCount}")
 
             equipment.availableCount -= request.count
 
@@ -58,18 +62,18 @@ class RentingService(
         return DetailedRentingDto(savedRenting)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun updateRentingStatus(id: UUID, userId: UUID, rentingStatus: RentingStatus) : DetailedRentingDto {
-        val renting = rentingRepository.findById(id)
-            .orElseThrow { RuntimeException("Renting with id $id not found") }
+        val renting = rentingRepository.findByIdOrNull(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Renting with id $id not found")
 
         if (rentingStatus == RentingStatus.ISSUED) {
-            renting.issuingUser = userRepository.findById(userId)
-                .orElseThrow { RuntimeException("Issuing user with id $userId not found") }
+            renting.issuingUser = userRepository.findByIdOrNull(userId)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Issuing user with id $userId not found")
         }
         if (rentingStatus == RentingStatus.RETURNED) {
-            renting.returningUser = userRepository.findById(userId)
-                .orElseThrow { RuntimeException("Returning user with id $userId not found") }
+            renting.returningUser = userRepository.findByIdOrNull(userId)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Returning user with id $userId not found")
 
             renting.equipmentRenting.forEach { it -> it.equipment.availableCount += it.count }
         }
@@ -80,10 +84,10 @@ class RentingService(
         return DetailedRentingDto(savedRenting)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun updateRenting(id: UUID, dto: UpdateRentingDto) : DetailedRentingDto {
-        val renting = rentingRepository.findById(id)
-            .orElseThrow { RuntimeException("Renting with id $id not found") }
+        val renting = rentingRepository.findByIdOrNull(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Renting with id $id not found")
 
         renting.apply {
             startTime = dto.startTime
@@ -97,11 +101,11 @@ class RentingService(
         renting.equipmentRenting.clear()
 
         for (request in dto.equipments) {
-            val equipment = equipmentRepository.findById(request.equipmentId)
-                .orElseThrow { RuntimeException("Equipment with id ${request.equipmentId} not found") }
+            val equipment = equipmentRepository.findByIdOrNull(request.equipmentId)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Equipment with id ${request.equipmentId} not found")
 
             if (equipment.availableCount < request.count)
-                throw RuntimeException("Not enough stock for equipment: ${equipment.name}. Requested: ${request.count}, Available: ${equipment.availableCount}")
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Not enough stock for equipment: ${equipment.name}. Requested: ${request.count}, Available: ${equipment.availableCount}")
 
             equipment.availableCount -= request.count
 
@@ -125,13 +129,16 @@ class RentingService(
 
     @Transactional(readOnly = true)
     fun getRentingById(id: UUID): DetailedRentingDto {
-        return DetailedRentingDto(rentingRepository.findById(id).get())
+        val renting = rentingRepository.findByIdOrNull(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Renting with id $id not found")
+
+        return DetailedRentingDto(renting)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun deleteRenting(id: UUID) {
-        val renting = rentingRepository.findById(id)
-            .orElseThrow { RuntimeException("Renting with id $id not found") }
+        val renting = rentingRepository.findByIdOrNull(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Renting with id $id not found")
 
         for (e in renting.equipmentRenting) {
             e.equipment.availableCount += e.count

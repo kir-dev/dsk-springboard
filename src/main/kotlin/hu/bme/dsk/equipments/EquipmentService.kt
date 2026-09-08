@@ -1,8 +1,11 @@
 package hu.bme.dsk.equipments
 
 import hu.bme.dsk.sports.SportRepository
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 @Service
@@ -10,15 +13,15 @@ class EquipmentService (
     private val equipmentRepository: EquipmentRepository,
     private val sportRepository: SportRepository
 ) {
-    @Transactional
+    @Transactional(readOnly = false)
     fun createEquipment(equipmentDto: CreateEquipmentDto, sportId: UUID): DetailedEquipmentDto {
-        val sport = sportRepository.findById(sportId)
-            .orElseThrow { RuntimeException("Sport with id $sportId not found") }
+        val sport = sportRepository.findByIdOrNull(sportId)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Sport with id $sportId not found")
 
         val equipment = EquipmentEntity(
             name = equipmentDto.name,
             description = equipmentDto.description,
-            count = equipmentDto.count, // Fixed a tiny typo here!
+            count = equipmentDto.count,
             availableCount = equipmentDto.count,
             imageLink = equipmentDto.imageLink,
             sport = sport
@@ -39,20 +42,20 @@ class EquipmentService (
 
     @Transactional(readOnly = true)
     fun getEquipmentById(id: UUID): DetailedEquipmentDto {
-        val equipment = equipmentRepository.findById(id)
-            .orElseThrow { RuntimeException("Equipment with id $id not found") }
+        val equipment = equipmentRepository.findByIdOrNull(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Equipment with id $id not found")
 
         return DetailedEquipmentDto(equipment)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun updateEquipment(id: UUID, dto: UpdateEquipmentDto, sportId: UUID) : DetailedEquipmentDto {
-        val equipment = equipmentRepository.findById(id)
-            .orElseThrow { RuntimeException("Equipment with id $id not found") }
+        val equipment = equipmentRepository.findByIdOrNull(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Equipment with id $id not found")
 
         val newAvailableCount = equipment.availableCount + dto.count - equipment.count
 
-        if (newAvailableCount < 0) throw RuntimeException("Inventory cannot be negative")
+        if (newAvailableCount < 0) throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Inventory cannot be negative")
 
         equipment.apply {
             name = dto.name
@@ -65,8 +68,8 @@ class EquipmentService (
         if (sportId != equipment.sport.id) {
             equipment.sport.equipments.remove(equipment)
 
-            val newSport = sportRepository.findById(sportId)
-                .orElseThrow { RuntimeException("Sport with id $sportId not found") }
+            val newSport = sportRepository.findByIdOrNull(sportId)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Sport with id $sportId not found")
 
             newSport.equipments.add(equipment)
 
@@ -77,10 +80,10 @@ class EquipmentService (
         return DetailedEquipmentDto(updatedEquipment)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun deleteEquipment(id: UUID) {
-        val equipment = equipmentRepository.findById(id)
-            .orElseThrow { RuntimeException("Equipment with id $id not found") }
+        val equipment = equipmentRepository.findByIdOrNull(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Equipment with id $id not found")
 
         equipment.sport.equipments.remove(equipment)
         equipmentRepository.delete(equipment)
