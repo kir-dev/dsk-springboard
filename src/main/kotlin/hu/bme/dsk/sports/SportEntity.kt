@@ -6,7 +6,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "sports")
-data class SportEntity(
+class SportEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID = UUID.randomUUID(),

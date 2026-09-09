@@ -9,7 +9,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "gym_reservation")
-data class ReservationEntity(
+class ReservationEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID = UUID.randomUUID(),
