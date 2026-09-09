@@ -7,11 +7,12 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import java.io.Serializable
 import java.security.Principal
+import java.util.UUID
 
 class LoginGoogleUser(
-    override val id: Long,
-    override val authId: Long?,
-    override val googleId: Long?,
+    override val id: UUID,
+    override val authId: UUID?,
+    override val googleId: UUID?,
     override var roles: List<UserRole>,
     override val userName: String,
     authorities: List<GrantedAuthority>,
