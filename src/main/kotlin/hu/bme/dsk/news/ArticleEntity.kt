@@ -8,7 +8,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "articles")
-data class ArticleEntity(
+class ArticleEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID = UUID.randomUUID(),

@@ -1,17 +1,21 @@
 package hu.bme.dsk.auditlog
 
+import hu.bme.dsk.users.UserEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import java.time.Instant
+import java.util.UUID
 
 @Entity
 @Table(name = "audit_log")
-data class LogEntity(
+class LogEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: Long,
+    val id: UUID = UUID.randomUUID(),
 
-    var userId: Long,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    var user: UserEntity,
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -31,7 +35,7 @@ data class LogEntity(
     }
 
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , userId = $userId , message = $message )"
+        return this::class.simpleName + "(id = $id , message = $message )"
     }
 }
 
