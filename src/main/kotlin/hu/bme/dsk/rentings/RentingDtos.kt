@@ -50,7 +50,7 @@ data class CreateRentingDto(
     val creatingUserId: UUID,
     val issuingUserId: UUID?,
     val returningUserId: UUID?,
-    val equipments: List<CreateEquipmentRentingDto>,
+    val equipments: List<EquipmentRequestDto>,
 )
 
 data class UpdateRentingDto(
@@ -59,5 +59,5 @@ data class UpdateRentingDto(
     val creatingUserId: UUID,
     val issuingUserId: UUID?,
     val returningUserId: UUID?,
-    val equipments: List<UpdateEquipmentRentingDto>,
+    val equipments: List<EquipmentRequestDto>,
 )

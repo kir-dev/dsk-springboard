@@ -27,12 +27,7 @@ data class DetailedEquipmentRentingDto(
     )
 }
 
-data class CreateEquipmentRentingDto(
-    val count: Int,
-    val equipmentId: UUID,
-)
-
-data class UpdateEquipmentRentingDto(
+data class EquipmentRequestDto(
     val count: Int,
     val equipmentId: UUID,
 )

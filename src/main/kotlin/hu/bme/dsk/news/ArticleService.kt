@@ -14,7 +14,7 @@ class ArticleService(
     private val userRepository: UserRepository,
 ) {
     @Transactional(readOnly = false)
-    fun createArticle(dto: CreateArticleDto, authorId: UUID) : DetailedArticleDto {
+    fun create(dto: CreateArticleDto, authorId: UUID) : DetailedArticleDto {
         val author = userRepository.findByIdOrNull(authorId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Author user with id $authorId not found")
 
@@ -31,7 +31,7 @@ class ArticleService(
     }
 
     @Transactional(readOnly = true)
-    fun getArticleById(articleId: UUID) : DetailedArticleDto {
+    fun find(articleId: UUID) : DetailedArticleDto {
         val article = articleRepository.findByIdOrNull(articleId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Article with id $articleId not found")
 
@@ -39,7 +39,7 @@ class ArticleService(
     }
 
     @Transactional(readOnly = true)
-    fun getAllArticles() : List<DetailedArticleDto> {
+    fun findAll() : List<DetailedArticleDto> {
         return articleRepository.findAll().map{ DetailedArticleDto(it) }
     }
 
@@ -63,7 +63,7 @@ class ArticleService(
     }
 
     @Transactional(readOnly = false)
-    fun deleteArticle(id: UUID) {
+    fun delete(id: UUID) {
         val article = articleRepository.findByIdOrNull(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Article with id $id not found")
 

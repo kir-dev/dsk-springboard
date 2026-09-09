@@ -12,7 +12,7 @@ class SportService (
     private val sportRepository: SportRepository,
 ) {
     @Transactional(readOnly = false)
-    fun createSport(dto: CreateSportDto): DetailedSportDto {
+    fun create(dto: CreateSportDto): DetailedSportDto {
         val sport = SportEntity(
             name = dto.name,
             equipments = mutableListOf(),
@@ -22,12 +22,12 @@ class SportService (
     }
 
     @Transactional(readOnly = true)
-    fun getAllSports(): List<SportDto> {
+    fun findAll(): List<SportDto> {
         return sportRepository.findAll().map { SportDto(it) }
     }
 
     @Transactional(readOnly = true)
-    fun getSportById(id: UUID): DetailedSportDto {
+    fun find(id: UUID): DetailedSportDto {
         val sport = sportRepository.findByIdOrNull(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Sport with id ${id} not found")
 
@@ -35,7 +35,7 @@ class SportService (
     }
 
     @Transactional(readOnly = false)
-    fun updateSport(id: UUID, dto: UpdateSportDto): DetailedSportDto {
+    fun update(id: UUID, dto: UpdateSportDto): DetailedSportDto {
         val sport = sportRepository.findByIdOrNull(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Sport with id ${id} not found")
 
@@ -46,7 +46,7 @@ class SportService (
     }
 
     @Transactional(readOnly = false)
-    fun deleteSport(id: UUID) {
+    fun delete(id: UUID) {
         val sport = sportRepository.findByIdOrNull(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Sport with id ${id} not found")
 

@@ -14,7 +14,7 @@ class EquipmentService (
     private val sportRepository: SportRepository
 ) {
     @Transactional(readOnly = false)
-    fun createEquipment(equipmentDto: CreateEquipmentDto, sportId: UUID): DetailedEquipmentDto {
+    fun create(equipmentDto: CreateEquipmentDto, sportId: UUID): DetailedEquipmentDto {
         val sport = sportRepository.findByIdOrNull(sportId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Sport with id $sportId not found")
 
@@ -30,27 +30,26 @@ class EquipmentService (
         val savedEquipment = equipmentRepository.save(equipment)
 
         sport.equipments.add(savedEquipment)
-        sportRepository.save(sport)
 
         return DetailedEquipmentDto(savedEquipment)
     }
 
     @Transactional(readOnly = true)
-    fun getAllEquipments(): List<DetailedEquipmentDto> {
-        return equipmentRepository.findAll().map { DetailedEquipmentDto(it) }
+    fun findAll(): List<DetailedEquipmentDto> {
+        return equipmentRepository.findAllWithSport().map { DetailedEquipmentDto(it) }
     }
 
     @Transactional(readOnly = true)
-    fun getEquipmentById(id: UUID): DetailedEquipmentDto {
-        val equipment = equipmentRepository.findByIdOrNull(id)
+    fun find(id: UUID): DetailedEquipmentDto {
+        val equipment = equipmentRepository.findByIdWithSport(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Equipment with id $id not found")
 
         return DetailedEquipmentDto(equipment)
     }
 
     @Transactional(readOnly = false)
-    fun updateEquipment(id: UUID, dto: UpdateEquipmentDto, sportId: UUID) : DetailedEquipmentDto {
-        val equipment = equipmentRepository.findByIdOrNull(id)
+    fun update(id: UUID, dto: UpdateEquipmentDto, sportId: UUID) : DetailedEquipmentDto {
+        val equipment = equipmentRepository.findByIdWithSport(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Equipment with id $id not found")
 
         val newAvailableCount = equipment.availableCount + dto.count - equipment.count
@@ -81,8 +80,8 @@ class EquipmentService (
     }
 
     @Transactional(readOnly = false)
-    fun deleteEquipment(id: UUID) {
-        val equipment = equipmentRepository.findByIdOrNull(id)
+    fun delete(id: UUID) {
+        val equipment = equipmentRepository.findByIdWithSport(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"Equipment with id $id not found")
 
         equipment.sport.equipments.remove(equipment)
