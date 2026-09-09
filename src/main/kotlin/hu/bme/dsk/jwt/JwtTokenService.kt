@@ -6,6 +6,7 @@ import hu.bme.dsk.login.LoginUserPrincipal
 import hu.bme.dsk.users.UserRole
 import hu.bme.dsk.users.UserService
 import hu.bme.dsk.util.getUserEntityFromDatabase
+import hu.bme.dsk.util.toUUIDOrNull
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.JwtException
@@ -75,9 +76,10 @@ class JwtTokenService (
         val roles = parsed[JWT_CLAIM_ROLES]?.let { it as List<String> }?.map { UserRole.valueOf(it) } ?: listOf(UserRole.GUEST)
         return UsernamePasswordAuthenticationToken(
             LoginUserPrincipal(
-                id = parsed[JWT_CLAIM_USERID]?.toString()?.toLong() ?: 0,
-                authId = parsed[JWT_CLAIM_AUTHID]?.toString()?.toLong(),
-                googleId = parsed[JWT_CLAIM_GOOGLEID]?.toString()?.toLong(),
+                id = parsed[JWT_CLAIM_USERID]?.toString()?.toUUIDOrNull()
+                    ?: throw InvalidJwtAuthenticationException("Invalid or missing User ID in JWT token"),
+                authId = parsed[JWT_CLAIM_AUTHID]?.toString(),
+                googleId = parsed[JWT_CLAIM_GOOGLEID]?.toString(),
                 roles = roles,
                 userName = parsed[JWT_CLAIM_USERNAME]?.toString() ?: "unnamed",
             ),

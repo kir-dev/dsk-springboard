@@ -7,5 +7,5 @@ import java.util.UUID
 
 @Repository
 interface SportRepository : JpaRepository<SportEntity, UUID> {
-    fun findAllOrderByTitleDesc(): List<SportEntity>
+    fun findAllByOrderByNameDesc(): List<SportEntity>
 }

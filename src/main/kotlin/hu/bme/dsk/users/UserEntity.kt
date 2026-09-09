@@ -23,13 +23,13 @@ data class UserEntity(
 
     var roles: MutableList<UserRole> = mutableListOf(),
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "creatingUser", cascade = [CascadeType.ALL], orphanRemoval = true)
     var reservations: MutableList<ReservationEntity> = mutableListOf(),
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "creatingUser", cascade = [CascadeType.ALL], orphanRemoval = true)
     var rentings: MutableList<RentingEntity> = mutableListOf(),
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "author", cascade = [CascadeType.ALL], orphanRemoval = true)
     var articles: MutableList<ArticleEntity> = mutableListOf(),
 ) {
     override fun equals(other: Any?): Boolean {

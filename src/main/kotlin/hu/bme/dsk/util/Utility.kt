@@ -5,6 +5,7 @@ import hu.bme.dsk.users.DetailedUserDto
 import hu.bme.dsk.users.UserEntity
 import hu.bme.dsk.users.UserService
 import org.springframework.security.core.Authentication
+import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
 
 fun Authentication.getUser(): LoginUser {
@@ -19,6 +20,17 @@ fun Authentication.getUserEntityFromDatabase(userService: UserService): Detailed
     return userService.getByUsername(this.name)
 }
 
-fun Authentication?.getUserEntityFromDatabaseOrNull(userService: UserService): UserEntity? {
-    return if (this == null) null else userService.findByInternalId(this.name).getOrNull()
+fun Authentication?.getUserEntityFromDatabaseOrNull(userService: UserService): DetailedUserDto? {
+    val userIdString = this?.name ?: return null
+
+    return userService.findByInternalId(userIdString)
+}
+
+fun String.toUUIDOrNull(): UUID? {
+    return try {
+        UUID.fromString(this)
+    }
+    catch (e : IllegalArgumentException) {
+        null
+    }
 }

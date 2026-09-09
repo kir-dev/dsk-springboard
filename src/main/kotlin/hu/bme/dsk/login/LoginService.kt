@@ -3,6 +3,8 @@ package hu.bme.dsk.login
 import hu.bme.dsk.config.StartupPropertyConfig
 import hu.bme.dsk.login.authsch.AuthschProfileResponse
 import hu.bme.dsk.login.google.GoogleUserInfoResponse
+import hu.bme.dsk.users.CreateUserDto
+import hu.bme.dsk.users.DetailedUserDto
 import hu.bme.dsk.users.UserEntity
 import hu.bme.dsk.users.UserService
 import org.slf4j.LoggerFactory
@@ -17,34 +19,34 @@ class LoginService(
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    fun fetchAuthschUserEntity(profile: AuthschProfileResponse): UserEntity {
+    fun fetchAuthschUserEntity(profile: AuthschProfileResponse): DetailedUserDto {
         try {
-            val user = users.findByAuthId(profile.internalId)
-                .orElseGet {
-                    log.info("No user found with authId ${profile.internalId}. Creating a new user.")
-                    log.info("Creating new user ${profile.email} with authId ${profile.internalId}.")
-                    return@orElseGet users.save(users.generateUserEntity(profile))
-                }
+            val user = users.findByAuthIdOrNull(profile.internalId)
+            if (user != null) return user
 
-            return user
-        } catch (e: Exception) {
+            log.info("No user found with authId ${profile.internalId}. Creating a new user.")
+            log.info("Creating new user ${profile.email} with authId ${profile.internalId}.")
+
+            return users.generateUser(profile)
+        }
+        catch (e: Exception) {
             log.error("Error fetching or creating user entity for profile ${profile.internalId}: ${e.message}", e)
             throw LoginRejectedException("Sikertelen bejelentkezési kísérelt")
         }
     }
 
-    fun fetchGoogleUserEntity(profile: GoogleUserInfoResponse): UserEntity {
+    fun fetchGoogleUserEntity(profile: GoogleUserInfoResponse): DetailedUserDto {
         try {
-            val user = users.findByGoogleId(profile.internalId)
-                .orElseGet {
-                    log.info("No user found with Google ID ${profile.internalId}. Creating a new user.")
-                    log.info("Creating new user ${profile.email} with Google ID ${profile.internalId}.")
-                    return@orElseGet users.save(users.generateUserEntity(profile))
-                }
+            val user = users.findByGoogleIdOrNull(profile.internalId)
+            if (user != null) return user
 
-            return user
-        } catch (e: Exception) {
-            log.error("Error fetching or creating user entity for Google profile ${profile.internalId}: ${e.message}", e)
+            log.info("No user found with authId ${profile.internalId}. Creating a new user.")
+            log.info("Creating new user ${profile.email} with authId ${profile.internalId}.")
+
+            return users.generateUser(profile)
+        }
+        catch (e: Exception) {
+            log.error("Error fetching or creating user entity for profile ${profile.internalId}: ${e.message}", e)
             throw LoginRejectedException("Sikertelen bejelentkezési kísérelt")
         }
     }

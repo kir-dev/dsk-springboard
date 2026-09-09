@@ -23,6 +23,13 @@ class UserService(
     }
 
     @Transactional(readOnly = true)
+    fun findByAuthIdOrNull(authId: String): DetailedUserDto? {
+        val user = userRepository.findByAuthId(authId)
+
+        return user?.let { DetailedUserDto(it) }
+    }
+
+    @Transactional(readOnly = true)
     fun findByGoogleId(googleId: String): DetailedUserDto {
         val user = userRepository.findByGoogleId(googleId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id $googleId not found")
@@ -30,10 +37,18 @@ class UserService(
         return DetailedUserDto(user)
     }
 
+    @Transactional(readOnly = true)
+    fun findByGoogleIdOrNull(googleId: String): DetailedUserDto? {
+        val user = userRepository.findByGoogleId(googleId)
+
+        return user?.let { DetailedUserDto(it) }
+    }
+
     @Transactional(readOnly = false)
-    fun generateUserEntity(profile: AuthschProfileResponse): DetailedUserDto {
+    fun generateUser(profile: AuthschProfileResponse): DetailedUserDto {
         val user = UserEntity(
-            username = profile.displayName ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "User name not found"),
+            username = profile.displayName
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "User name not found"),
             authId = profile.internalId,
         )
 
@@ -42,7 +57,7 @@ class UserService(
     }
 
     @Transactional(readOnly = false)
-    fun generateUserEntity(profile: GoogleUserInfoResponse): DetailedUserDto {
+    fun generateUser(profile: GoogleUserInfoResponse): DetailedUserDto {
         val user = UserEntity(
             username = profile.name,
             googleId = profile.internalId,
@@ -53,8 +68,13 @@ class UserService(
     }
 
     @Transactional(readOnly = false)
-    fun save(user: UserEntity): DetailedUserDto {
-        return DetailedUserDto( userRepository.save(user) )
+    fun save(dto: CreateUserDto): DetailedUserDto {
+        val user = UserEntity(
+            username = dto.username,
+            roles = dto.roles.toMutableList(),
+        )
+
+        return DetailedUserDto( userRepository.save(user))
     }
 
     @Transactional(readOnly = true)

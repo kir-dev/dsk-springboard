@@ -1,6 +1,5 @@
 package hu.bme.dsk.auditlog
 
-import hu.bme.dsk.equipments.DetailedEquipmentDto
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query

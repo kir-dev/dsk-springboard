@@ -27,7 +27,7 @@ data class DetailedUserDto(
     val username: String,
     val authId : String?,
     val googleId : String?,
-    val roles : List<UserRole>?,
+    val roles : List<UserRole>,
     val reservations: List<ReservationDto>,
     val rentings: List<RentingDto>,
     val articles: List<ArticleDto>,
@@ -43,6 +43,11 @@ data class DetailedUserDto(
         articles = user.articles.map { ArticleDto(it) },
     )
 }
+
+data class CreateUserDto(
+    val username : String,
+    val roles: List<UserRole>,
+)
 
 data class UpdateUserDto(
     val username: String,

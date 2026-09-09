@@ -11,8 +11,8 @@ import java.util.UUID
 
 class LoginGoogleUser(
     override val id: UUID,
-    override val authId: UUID?,
-    override val googleId: UUID?,
+    override val authId: String?,
+    override val googleId: String?,
     override var roles: List<UserRole>,
     override val userName: String,
     authorities: List<GrantedAuthority>,
