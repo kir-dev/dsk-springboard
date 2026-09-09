@@ -26,7 +26,7 @@ class EquipmentEntity(
     @JoinColumn(name = "sport_id", nullable = false)
     var sport: SportEntity,
 
-    @OneToMany(mappedBy = "sport_equipment", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "equipment", cascade = [CascadeType.ALL], orphanRemoval = true)
     var equipmentRenting: MutableList<EquipmentRentingEntity> = mutableListOf(),
 ) {
     override fun toString(): String {

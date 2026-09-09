@@ -3,11 +3,12 @@ package hu.bme.dsk.login
 import hu.bme.dsk.users.UserRole
 import java.io.Serializable
 import java.security.Principal
+import java.util.UUID
 
 data class LoginUserPrincipal(
-    override val id: Long,
-    override val authId: Long?,
-    override val googleId: Long?,
+    override val id: UUID,
+    override val authId: String?,
+    override val googleId: String?,
     override var roles: List<UserRole>,
     override val userName: String,
 ): Serializable, Principal, LoginUser {

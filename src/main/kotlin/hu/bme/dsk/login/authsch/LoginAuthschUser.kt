@@ -6,11 +6,12 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import java.io.Serializable
 import java.security.Principal
+import java.util.UUID
 
 class LoginAuthschUser(
-    override val id: Long,
-    override val authId: Long?,
-    override val googleId: Long?,
+    override val id: UUID,
+    override val authId: String?,
+    override val googleId: String?,
     override var roles: List<UserRole>,
     override val userName: String,
     authorities: List<GrantedAuthority>,

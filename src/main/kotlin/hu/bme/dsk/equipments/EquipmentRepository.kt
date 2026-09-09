@@ -21,5 +21,5 @@ interface EquipmentRepository : JpaRepository<EquipmentEntity, UUID> {
     fun findAllBySportId(sportId: UUID): List<EquipmentEntity>
 
     @EntityGraph(attributePaths = ["sport"])
-    fun findAllOrderByAvailableCountDesc(): List<EquipmentEntity>
+    fun findAllByOrderByAvailableCountDesc(): List<EquipmentEntity>
 }
