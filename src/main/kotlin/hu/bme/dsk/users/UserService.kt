@@ -52,7 +52,7 @@ class UserService(
         return DetailedUserDto(savedUser)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun save(user: UserEntity): DetailedUserDto {
         return DetailedUserDto( userRepository.save(user) )
     }
@@ -86,7 +86,7 @@ class UserService(
         return DetailedUserDto(user)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun updateUser(id: UUID, dto: UpdateUserDto): DetailedUserDto {
         val user = userRepository.findByIdOrNull(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id $id not found")
@@ -100,7 +100,7 @@ class UserService(
         return DetailedUserDto(updatedUser)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun deleteUserByInternalId(id: String) {
         val user = findByInternalId(id)
 
