@@ -18,7 +18,7 @@ class LoginUserDetailsService(
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     override fun loadUserByUsername(username: String): UserDetails {
         val user = userRepository.findByUsername(username)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with username $username not found")
+            ?: throw UsernameNotFoundException("User not found with username: $username")
 
         return LoginUserDetails(user)
     }
