@@ -40,8 +40,8 @@ class LoginService(
             val user = users.findByGoogleIdOrNull(profile.internalId)
             if (user != null) return user
 
-            log.info("No user found with authId ${profile.internalId}. Creating a new user.")
-            log.info("Creating new user ${profile.email} with authId ${profile.internalId}.")
+            log.info("No user found with googleId ${profile.internalId}. Creating a new user.")
+            log.info("Creating new user ${profile.email} with googleId ${profile.internalId}.")
 
             return users.generateUser(profile)
         }

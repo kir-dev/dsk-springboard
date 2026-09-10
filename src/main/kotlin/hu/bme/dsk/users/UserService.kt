@@ -106,6 +106,14 @@ class UserService(
         return DetailedUserDto(user)
     }
 
+    @Transactional(readOnly = true)
+    fun findByInternalIdOrNull(id: String) : DetailedUserDto? {
+        val user = userRepository.findByAuthIdOrGoogleId(id, id)
+            ?: return null
+
+        return DetailedUserDto(user)
+    }
+
     @Transactional(readOnly = false)
     fun updateUser(id: UUID, dto: UpdateUserDto): DetailedUserDto {
         val user = userRepository.findByIdOrNull(id)

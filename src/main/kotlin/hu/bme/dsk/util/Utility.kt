@@ -23,7 +23,7 @@ fun Authentication.getUserEntityFromDatabase(userService: UserService): Detailed
 fun Authentication?.getUserEntityFromDatabaseOrNull(userService: UserService): DetailedUserDto? {
     val userIdString = this?.name ?: return null
 
-    return userService.findByInternalId(userIdString)
+    return userService.findByInternalIdOrNull(userIdString)
 }
 
 fun String.toUUIDOrNull(): UUID? {
