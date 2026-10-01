@@ -47,6 +47,8 @@ data class DetailedUserDto(
 data class CreateUserDto(
     val username : String,
     val roles: List<UserRole>,
+    val authId : String?,
+    val googleId : String?,
 )
 
 data class UpdateUserDto(

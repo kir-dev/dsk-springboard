@@ -129,6 +129,14 @@ class UserService(
     }
 
     @Transactional(readOnly = false)
+    fun deleteUser(id: UUID) {
+        val user = userRepository.findByIdOrNull(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id $id not found")
+
+        userRepository.delete(user)
+    }
+
+    @Transactional(readOnly = false)
     fun deleteUserByInternalId(id: String) {
         val user = findByInternalId(id)
 
