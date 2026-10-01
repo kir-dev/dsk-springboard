@@ -5,13 +5,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
-@RestController(value = "/news")
+@RestController
+@RequestMapping("/api/news")
 class ArticleController(
     private val articleService: ArticleService
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@Valid @RequestBody dto: CreateArticleDto, @RequestBody authorId: UUID) : DetailedArticleDto {
+    fun create(@Valid @RequestBody dto: CreateArticleDto, @RequestParam authorId: UUID) : DetailedArticleDto {
         return articleService.create(dto, authorId)
     }
 
@@ -27,7 +28,7 @@ class ArticleController(
         return articleService.findAll()
     }
 
-    @PatchMapping
+    @PatchMapping("/{articleId}")
     @ResponseStatus(HttpStatus.OK)
     fun updateArticle(@PathVariable articleId: UUID, @Valid @RequestBody dto: UpdateArticleDto) : DetailedArticleDto {
         return articleService.updateArticle(articleId, dto)

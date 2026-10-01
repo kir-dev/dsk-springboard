@@ -1,6 +1,5 @@
 package hu.bme.dsk.sports
 
-import hu.bme.dsk.equipments.DetailedEquipmentDto
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -8,7 +7,7 @@ import java.util.UUID
 
 
 @RestController
-@RequestMapping("/sports")
+@RequestMapping("/api/sports")
 class SportController (
     private val sportService: SportService
 ){

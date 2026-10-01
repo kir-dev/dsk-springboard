@@ -1,7 +1,5 @@
 package hu.bme.dsk.equipments
 
-import hu.bme.dsk.gymreservation.DetailedReservationDto
-import hu.bme.dsk.users.DetailedUserDto
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -14,7 +12,7 @@ class EquipmentController(
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@Valid @RequestBody dto: CreateEquipmentDto, @RequestBody sportId: UUID) : DetailedEquipmentDto {
+    fun create(@Valid @RequestBody dto: CreateEquipmentDto, @RequestParam sportId: UUID) : DetailedEquipmentDto {
         return equipmentService.create(dto, sportId)
     }
 
@@ -32,7 +30,7 @@ class EquipmentController(
 
     @PatchMapping("/{equipmentId}")
     @ResponseStatus(HttpStatus.OK)
-    fun update(@PathVariable equipmentId: UUID, @Valid @RequestBody dto: UpdateEquipmentDto, @RequestBody sportId: UUID) : DetailedEquipmentDto {
+    fun update(@PathVariable equipmentId: UUID, @Valid @RequestBody dto: UpdateEquipmentDto, @RequestParam sportId: UUID) : DetailedEquipmentDto {
         return equipmentService.update(equipmentId, dto, sportId)
     }
 

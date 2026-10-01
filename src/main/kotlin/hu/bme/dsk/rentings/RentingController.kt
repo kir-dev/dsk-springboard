@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
 
-@RestController("/rentings")
+@RestController
+@RequestMapping("/api/rentings")
 class RentingController(
     private val rentingService: RentingService
 ) {
